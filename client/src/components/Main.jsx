@@ -8,6 +8,7 @@ import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { useRouter } from "next/router";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
+import Chat from "./Chat/Chat";
 
 const Main = () => {
   const router = useRouter();
@@ -45,7 +46,8 @@ const Main = () => {
           "grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden"
         }>
         <ChatList />
-        <Empty />
+        {/*<Empty /> */}
+        <Chat />
       </div>
     </>
   );
