@@ -10,7 +10,8 @@ const ChatListHeader = () => {
     { userInfo?.profileImage && <Avatar type={"sm"}  image={userInfo?.profileImage} />}
     </div>
     <div className={'flex gap-6'} > 
-    <BsFillChatLeftTextFill />
+    <BsFillChatLeftTextFill className={'text-panel-header-icon cursor-pointer text-xl'} title={'new-Chat'} />
+    <> <BsThreeDotsVertical className={'text-panel-header-icon cursor-pointer text-xl'} title={'chat-menu'} /> </>
     </div>
     </div>
   )
