@@ -36,11 +36,12 @@ const onboarding = () => {
           dispatch({
             type: reducerCases.SET_USER_INFO,
             userInfo: {
-              id: data.id,
+              id: data.user.id,
               name,
               email,
               profileImage: image,
-              status: about,
+              status: data.status,
+              about,
             },
           });
           router.push("/");
@@ -80,8 +81,7 @@ const onboarding = () => {
                 "text-white flex justify-center items-center gap-7 bg-search-input-container-background rounded-lg p-5"
               }
               onClick={onboardUserHandler}>
-              {" "}
-              Create Profile{" "}
+              Create Profile
             </button>
           </div>
         </div>

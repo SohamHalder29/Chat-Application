@@ -86,7 +86,7 @@ const Avatar = ({ type, image, setImage }) => {
       <div className={"flex justify-center items-center"}>
         {type === "sm" && (
           <div className={"relative h-10 w-10 cursor-pointer"}>
-            <Image src={image} alt={"avater"} className={"rounded-full"} fill />
+            <Image src={image} alt={"avater"} className={"rounded-full"} fill sizes={'max-width:100px max-height:100px'} />
           </div>
         )}
         {type === "lg" && (

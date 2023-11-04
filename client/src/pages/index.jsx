@@ -1,12 +1,7 @@
-
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
+import Main from '@/components/Main'
+import React from 'react';
 export default function Home() {
   return (
-    <div>
-      Soham
-    </div>
+    <Main/>
   )
 }

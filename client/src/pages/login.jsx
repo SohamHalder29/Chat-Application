@@ -13,8 +13,11 @@ const login = () => {
   const router = useRouter();
   const [{ userInfo, newUser }, dispatch] = useStateProvider();
   useEffect(() => {
-    if (userInfo?.id && !newUser) router.push("/");
+    if (userInfo?.id && !newUser) {
+      router.push("/");
+    }
   }, [userInfo, newUser]);
+
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const {
@@ -23,19 +26,19 @@ const login = () => {
     try {
       if (email) {
         const { data } = await axios.post(CHECK_USER_ROUTE, { email });
-        console.log({ data });
         if (!data.status) {
           dispatch({ type: reducerCases.SET_NEW_USER, newUser: true });
           dispatch({
             type: reducerCases.SET_USER_INFO,
-            userInfo: { name, email, profileImage, status: "" },
+            userInfo: { name, email, profileImage, status: data.status },
           });
           router.push("/onboarding");
         } else {
-          const { id, name, email, profileImage: profileImage, status } = data;
+          const { id, name, email, profilePicture: profileImage } = data.data;
+          console.log({ data });
           dispatch({
             type: reducerCases.SET_USER_INFO,
-            userInfo: { id, name, email, profileImage, status },
+            userInfo: { id, name, email, profileImage, status: data.status },
           });
           router.push("/");
         }
@@ -55,6 +58,7 @@ const login = () => {
           alt={"WhatsApp"}
           width={300}
           height={300}
+          priority
           className={"bg-transparent"}
         />
         <span className={"text-7xl font-bold"}> WhatsApp</span>
