@@ -39,4 +39,5 @@ const onboardUser = async(req,res,next) =>{
     }
 }
 
+
 module.exports={checkUser, onboardUser};
