@@ -4,6 +4,7 @@ import { GET_ALL_CONTACTS } from "@/utils/ApiRoutes";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
+import ChatListItem from "./ChatListItem";
 
 const ContactList = () => {
   const [allContacts, setAllContacts] = useState([]);
@@ -12,9 +13,9 @@ const ContactList = () => {
     const getContacts = async () => {
       try {
         const {
-          data: { users },
+          data: { user },
         } = await axios.get(GET_ALL_CONTACTS);
-        setAllContacts(users);
+        setAllContacts(user);
       } catch (err) {
         console.log(err);
       }
@@ -35,28 +36,47 @@ const ContactList = () => {
           <span> New Chat </span>
         </div>
       </div>
-      <div className={'bg-search-input-container-background h-full flex flex-auto overflow-auto custom-scollbar '} >
-      <div className={'flex gap-3 py-3 px-2 h-14 items-center w-full'} >
       <div
-      className={
-        "bg-panel-header-background flex items-center gap-5 px-3 py-3 rounded-lg flex-grow"
-      }>
-      <div>
-        <BiSearchAlt2
-          className={"text-panel-header-icon cursor-pointer text-lg"}
-        />
-      </div>
-      <div className={'w-[90%]'} >
-        <input
-          type={"text"}
-          placeholder={"Search or start a new Chat"}
-          className={
-            "bg-transparent text-sm focus:outline-none text-white w-full"
-          }
-        />
-      </div>
-    </div>
-      </div>
+        className={
+          "bg-search-input-container-background h-full flex flex-col flex-auto overflow-auto custom-scollbar "
+        }>
+        <div className={"flex gap-3 py-3 px-2 h-14 items-center w-full"}>
+          <div
+            className={
+              "bg-panel-header-background flex items-center gap-5 px-3 py-3 rounded-lg flex-grow"
+            }>
+            <div>
+              <BiSearchAlt2
+                className={"text-panel-header-icon cursor-pointer text-lg"}
+              />
+            </div>
+            <div className={"w-[90%]"}>
+              <input
+                type={"text"}
+                placeholder={"Search Contacts"}
+                className={
+                  "bg-transparent text-sm focus:outline-none text-white w-full"
+                }
+              />
+            </div>
+          </div>
+        </div>
+        {Object.entries(allContacts).map(([initialLetter, userList]) => {
+          return (
+            <div key={Date.now() + initialLetter}>
+              <div className={"text-teal-light px-2 py-5"}>
+              {
+                initialLetter
+              }
+                {
+                  userList.map( (contact) => {
+                    return ( <ChatListItem data={contact} isContactPage={true} key={contact.id}  />)
+                  } )
+                }
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
