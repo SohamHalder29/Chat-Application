@@ -7,7 +7,7 @@ const checkUser = async (req, res, next) => {
       return res.json({ msg: "Email is required", status: false });
     }
     const prisma = getPrismaInstance();
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.User.findUnique({ where: { email } });
     if (!user) {
       return res.json({ msg: "User Not Found", status: false });
     } else {
@@ -25,7 +25,7 @@ const onboardUser = async (req, res, next) => {
       return res.send("Email, Name & ProfilePicture are required");
     }
     const prisma = getPrismaInstance();
-    const user = await prisma.user.create({
+    const user = await prisma.User.create({
       data: { email, name, about, profilePicture },
     });
     return res.json({

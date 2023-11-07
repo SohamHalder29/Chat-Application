@@ -10,10 +10,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
   name String
   about String @default("")
   profilePicture String @default("")
+  sentMessages Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
+}
+
+model Message {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  sender User @relation("sentMessages", fields: [senderId], references: [id])
+  senderId String @db.ObjectId
+  receiver User @relation("receivedMessages", fields: [receiverId], references: [id])
+  receiverId String @db.ObjectId
+  type String @default("text")
+  message String
+  messageStatus String @default("sent")
+  createAt DateTime @default(now())
 }
