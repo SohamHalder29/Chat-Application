@@ -29,25 +29,34 @@ const Main = () => {
       if (!data.status) {
         router.push("/login");
       }
-      if(data?.data){
-      const { id, name, email, profilePicture: profileImage} = data.data;
-      dispatch({
-        type: reducerCases.SET_USER_INFO,
-        userInfo: { id, name, email, profileImage, status:data.status },
-      });
-    }
+      if (data?.data) {
+        const { id, name, email, profilePicture: profileImage } = data.data;
+        dispatch({
+          type: reducerCases.SET_USER_INFO,
+          userInfo: { id, name, email, profileImage, status: data.status },
+        });
+      }
     }
   });
 
-  useEffect( ()=>{
-    const getMessages = async() =>{
-      const {data} = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo?.id}/${currentChatUser?.id}`);
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const {
+          data: { messages }
+        } = await axios.get(
+          `${GET_MESSAGES_ROUTE}/${userInfo?.id}/${currentChatUser?.id}`
+        );
+        dispatch({ type: reducerCases.SET_MESSAGES, messages });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (currentChatUser?.id) {
+      getMessages();
     }
-    if(currentChatUser?.id){
-    getMessages();
-    }
-  },[currentChatUser])
-
+  }, [currentChatUser]);
+  
   return (
     <>
       <div
@@ -55,9 +64,7 @@ const Main = () => {
           "grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden"
         }>
         <ChatList />
-        {
-          currentChatUser ? <Chat /> : <Empty />
-        }
+        {currentChatUser ? <Chat /> : <Empty />}
       </div>
     </>
   );
