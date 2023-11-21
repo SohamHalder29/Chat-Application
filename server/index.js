@@ -12,6 +12,9 @@ app.use(express.json());
 app.use(cors(
     origin = ["http://localhost:3000"]
     ));
+
+    app.use("/uploads/images/", express.static("uploads/images"));
+
     app.use("/api/auth", AuthRoutes)
 
     app.use("/api/message", MessageRouter);
