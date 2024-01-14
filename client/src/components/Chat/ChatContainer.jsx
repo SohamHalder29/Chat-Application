@@ -3,6 +3,8 @@ import { calculateTime } from "@/utils/CalculateTime";
 import React from "react";
 import MessageStatus from "../common/MessageStatus";
 import ImageMessage from "./ImageMessage";
+import dynamic from "next/dynamic";
+const VoiceMessage = dynamic( ()=> import ("./VoiceMessage"), {ssr:false});
 
 const ChatContainer = () => {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
@@ -37,8 +39,7 @@ const ChatContainer = () => {
                           : "bg-outgoing-background "
                       }`}>
                       <span className={"break-all text-white"}>
-                        {" "}
-                        {message.message}{" "}
+                        {message.message}
                       </span>
                       <div className={"flex items-end gap-1"}>
                         <span
@@ -56,6 +57,7 @@ const ChatContainer = () => {
                     </div>
                   )}
                   {message.type === "image" && <ImageMessage message={message} />}
+                  {message.type === "audio" && <VoiceMessage message={message} />}
                 </div>
               );
             })}

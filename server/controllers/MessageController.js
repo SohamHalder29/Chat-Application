@@ -92,7 +92,33 @@ const getMessage = async (req, res, next) => {
       next(error);
     }
   }
+  const addAudioMessage = async( req, res, next) =>{
+    try {
+      if(req.file){
+        const date = Date.now();
+        let fileName = "uploads/recordings/" + date + req.file.originalname;
+        renameSync(req.file.path, fileName);
+        const prisma = getPrismaInstance();
+        const {from, to} = req.query;
+        if(from && to){
+          const message = await prisma.Message.create({
+            data: {
+              message: fileName,
+              type: "audio",
+              sender: { connect: { id: to } },
+              receiver: { connect: { id: from } },
+            },
+          });
+          return res.status(201).json({message})
+        }
+        return res.status(400).send("from and to required")
+      }
+      return res.status(400).send("Audio is required");
+    } catch (error) {
+      next(error);
+    }
+  }
 
 
 
-module.exports = { addMessage, getMessage, addImageMessage };
+module.exports = { addMessage, getMessage, addImageMessage, addAudioMessage};

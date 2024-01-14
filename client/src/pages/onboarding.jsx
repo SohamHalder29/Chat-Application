@@ -63,7 +63,7 @@ const onboarding = () => {
       }>
       <div className={"flex items-center justify-center gap-2 "}>
         <Image
-          src={"/whatsapp.gif"}
+          src={"/Logo.svg"}
           alt={"Whatsapp"}
           width={300}
           height={300}

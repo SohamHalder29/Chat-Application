@@ -54,7 +54,7 @@ const login = () => {
       }>
       <div className={"flex items-center justify-center gap-2 text-white"}>
         <Image
-          src={"/whatsapp.gif"}
+          src={"/Logo.svg"}
           alt={"WhatsApp"}
           width={300}
           height={300}
