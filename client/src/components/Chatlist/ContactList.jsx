@@ -8,7 +8,24 @@ import ChatListItem from "./ChatListItem";
 
 const ContactList = () => {
   const [allContacts, setAllContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchContact, setSearchContact] = useState([]);
   const [{}, dispatch] = useStateProvider();
+
+  useEffect(() => {
+    if (searchTerm.length) {
+      const filterData = {};
+      Object.keys(allContacts).forEach((key) => {
+        filterData[key] = allContacts[key].filter((obj) =>
+          obj.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setSearchContact(filterData);
+      });
+    } else {
+      setSearchContact(allContacts);
+    }
+  }, [searchTerm]);
+
   useEffect(() => {
     const getContacts = async () => {
       try {
@@ -16,6 +33,7 @@ const ContactList = () => {
           data: { user },
         } = await axios.get(GET_ALL_CONTACTS);
         setAllContacts(user);
+        setSearchContact(user);
       } catch (err) {
         console.log(err);
       }
@@ -57,22 +75,28 @@ const ContactList = () => {
                 className={
                   "bg-transparent text-sm focus:outline-none text-white w-full"
                 }
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
         </div>
-        {Object.entries(allContacts).map(([initialLetter, userList]) => {
-          return (
+        {Object.entries(searchContact).map(([initialLetter, userList]) => {
+          return userList.length <= 0 ? (
+            <></>
+          ) : (
             <div key={Date.now() + initialLetter}>
               <div className={"text-teal-light px-2 py-5"}>
-              {
-                initialLetter
-              }
-                {
-                  userList.map( (contact) => {
-                    return ( <ChatListItem data={contact} isContactPage={true} key={contact.id}  />)
-                  } )
-                }
+                {initialLetter}
+                {userList.map((contact) => {
+                  return (
+                    <ChatListItem
+                      data={contact}
+                      isContactsPage={true}
+                      key={contact.id}
+                    />
+                  );
+                })}
               </div>
             </div>
           );

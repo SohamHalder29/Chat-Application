@@ -6,12 +6,12 @@ import { calculateTime } from '@/utils/CalculateTime'
 import MessageStatus from '../common/MessageStatus'
 import { FaCamera, FaMicrophone } from 'react-icons/fa'
 
-const ChatListItem = ({data, isContactPage=false}) => {
+const ChatListItem = ({data, isContactsPage}) => {
   const [{useInfo, currentChatUser}, dispatch] = useStateProvider();
   const handleContactClick = () =>{
     //if(currentChatUser?.id === data?.id ){
     //}
-    if(!isContactPage){
+    if(!isContactsPage){
       dispatch({
         type: reducerCases.CHANGE_CURRENT_CHAT_USER,
         user: {
@@ -38,10 +38,10 @@ const ChatListItem = ({data, isContactPage=false}) => {
       <div
         className={"min-h-full flex flex-col justify-center mt-3 pr-2 w-full"}>
         <div className={"flex justify-between"}>
-          <>
+          <div>
             <span className={"text-white"}> {data.name} </span>
-          </>
-          {!isContactPage && (
+          </div>
+          {!isContactsPage && (
             <div>
               <span
                 className={`${
@@ -58,20 +58,37 @@ const ChatListItem = ({data, isContactPage=false}) => {
           className={"flex border-b border-conversation-border pb-2 pt-1 pr-2"}>
           <div className={"flex justify-between w-full"}>
             <span className={"text-secondary text-sm line-clamp-1"}>
-              {isContactPage ? (
+              {isContactsPage ? (
                 data?.about || "\u00A0"
               ) : (
                 <div className={"flex items-center gap-1 max-w-[200px]"}>
-                  {useInfo && data.senderId === useInfo.id && <MessageStatus messageStatus={data.messageStatus} />}
-                  {data.type === "text" && <span className={"truncate"}>{data.message} </span> }
-                  {data.type === "audio" && <span className={"flex items-center gap-1"} > <FaMicrophone className={"text-panel-header-icon"} /> {data.type} </span> }
-                  {data.type === "image" && <span className={"flex items-center gap-1"} > <FaCamera className={"text-panel-header-icon"} /> {data.type} </span> }
+                  {useInfo && data.senderId === useInfo.id && (
+                    <MessageStatus messageStatus={data.messageStatus} />
+                  )}
+                  {data.type === "text" && (
+                    <span className={"truncate"}>{data.message} </span>
+                  )}
+                  {data.type === "audio" && (
+                    <span className={"flex items-center gap-1"}>
+                      <FaMicrophone className={"text-panel-header-icon"} />{" "}
+                      {data.type}
+                    </span>
+                  )}
+                  {data.type === "image" && (
+                    <span className={"flex items-center gap-1"}>
+                      {" "}
+                      <FaCamera className={"text-panel-header-icon"} />
+                      {data.type}
+                    </span>
+                  )}
                 </div>
               )}
             </span>
-            {
-              data.totalUnreadMessages>0 && <span className={"bg-icon-green px-[5px] rounded-full text-sm"} >{data.totalUnreadMessages}</span>
-            }
+            {data.totalUnreadMessages > 0 && (
+              <span className={"bg-icon-green px-[5px] rounded-full text-sm"}>
+                {data.totalUnreadMessages}
+              </span>
+            )}
           </div>
         </div>
       </div>
