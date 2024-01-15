@@ -18,7 +18,7 @@ const CaptureAudio =  dynamic(()=> import("../common/CaptureAudio"), {ssr: false
 
 const MessageBar = () => {
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
-  const [message, setMessage] = useState(" ");
+  const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef(null);
   const [grabImage, setGrabImage] = useState(false);
@@ -107,7 +107,7 @@ const MessageBar = () => {
         newMessage: { ...data.message },
         fromSelf: true,
       });
-      setMessage(" ");
+      setMessage("");
     } catch (error) {
       console.log(error);
     }

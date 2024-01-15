@@ -119,6 +119,102 @@ const getMessage = async (req, res, next) => {
     }
   }
 
+  const getInitialContactsWithMessages = async(req, res,next) =>{
+    try {
+      const userId = req.params.from;
+      const prisma = getPrismaInstance();
+      const user = await prisma.User.findUnique({
+        where: { id: userId },
+        include: {
+          sentMessages: {
+            include: {
+              sender: true,
+              receiver: true,
+            },
+            orderBy: {
+              createAt: "desc",
+            },
+          },
+          receivedMessages: {
+            include: {
+              sender: true,
+              receiver: true,
+            },
+            orderBy: {
+              createAt: "desc",
+            },
+          },
+        },
+      });
+
+      const messages = [...user.sentMessages, ...user.receivedMessages];
+
+      messages.sort((a,b)=> b.createAt.getTime() - a.createAt.getTime());
+
+      const users = new Map();
+      const messagesStatusChange = [];
+
+      messages.forEach((msg)=>{
+        const isSender = msg.senderId === userId ;
+        const calculatedId = isSender ? msg.receiverId : msg.senderId;
+
+        if (msg.messageStatus === "sent") {
+          messagesStatusChange.push(msg.id);
+        }
+
+        const {
+          id,
+          type,
+          message,
+          messageStatus,
+          createAt,
+          senderId,
+          receiverId,
+        } = msg;
+
+        if(!users.get(calculatedId)){
+
+          let user = {
+            messageId: id,
+            type,
+            message,
+            messageStatus,
+            createAt,
+            senderId,
+            receiverId,
+          };
+          if(isSender){
+            user = { ...user, ...msg.receiver, totalUnreadMessages:0,};
+          }else{
+            user = { ...user, ...msg.sender, totalUnreadMessages: messageStatus !== "read" ? 1 : 0};
+          }
+          users.set(calculatedId, {...user})
+
+        }else if( messageStatus !== "read" && !isSender ){
+          const user = users.get(calculatedId);
+          users.set(calculatedId, {
+            ...user, totalUnreadMessages: user.totalUnreadMessages+1,
+          });
+        }
+      });
+      if(messagesStatusChange.length){
+        await prisma.Message.updateMany({
+          where: {
+            id: { in: messagesStatusChange },
+          },
+          data: { messageStatus: "delivered" },
+        });
+      }
+
+      res.status(200).json({
+        users: Array.from(users.values()),
+        onlineUsers: Array.from(onlineUsers.keys()),
+      })
+
+    } catch (error) {
+      next(error)
+    }
+  }
 
 
-module.exports = { addMessage, getMessage, addImageMessage, addAudioMessage};
+module.exports = { addMessage, getMessage, addImageMessage, addAudioMessage, getInitialContactsWithMessages};

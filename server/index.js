@@ -6,13 +6,13 @@ const AuthRoutes = require("./router/AuthRoutes");
 const MessageRouter = require("./router/MessageRoutes");
 dotenv.config();
 const app = express();
-const Port = process.env.PORT;
+const Port = process.env.PORT | undefined;
 
-app.use(express.json());
 app.use(cors(
     origin = ["http://localhost:3000"]
     ));
 
+    app.use(express.json());
     app.use("/uploads/images/", express.static("uploads/images"));
     app.use("/uploads/recordings/", express.static("uploads/recordings"));
 

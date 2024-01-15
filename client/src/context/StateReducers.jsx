@@ -8,6 +8,9 @@ export const initialState = {
   messages: [],
   socket: undefined,
   messagesSearch: false,
+  userContacts: [],
+  onlineUsers: [],
+  filteredContacts: [],
 };
 
 const reducer = (state, action) => {
@@ -28,6 +31,15 @@ const reducer = (state, action) => {
       return { ...state, messages: [ ...state.messages, action.newMessage ] }
     case reducerCases.SET_MESSAGES_SEARCH:
       return {...state, messagesSearch: !state.messagesSearch,}
+    case reducerCases.SET_USER_CONTACTS:
+      return { ...state, userContacts: action.userContacts,}
+    case reducerCases.SET_ONLINE_CONTACTS:
+      return { ...state, onlineUsers: action.onlineUsers,}
+    case reducerCases.SET_CONTACT_SEARCH:
+      {
+        const filteredContacts = state.userContacts.filter((contact)=> contact.name.toLowerCase().includes(action.contactSearch.toLowerCase()));
+        return { ...state, contactSearch: action.contactSearch, filteredContacts,}
+      }
     default:
       return state;
   }

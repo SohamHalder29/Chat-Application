@@ -1,7 +1,9 @@
+import { useStateProvider } from "@/context/StateContext";
 import React from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BsFilter } from "react-icons/bs"
 const SearchBar = () => {
+
   return (
     <div
       className={
